@@ -88,16 +88,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   _onSubmitLoginButton() async {
-    if (_isFormValidated()) {
+
+    if (_isFormValidated()) {//check if form is valid
       ScaffoldMessenger.of(context).showSnackBar(
         loadingSnackBar(
           text: " Wait please...",
         ),
       );
 
-      await _authService.sendPasswordResetEmail(
-        email: _emailFieldController.text,
-      );
+      await _authService.sendPasswordResetEmail(email: _emailFieldController.text,);
 
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -110,5 +109,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
       CoffeeRouter.instance.push(HomeScreen.route());
     }
+
   }
 }

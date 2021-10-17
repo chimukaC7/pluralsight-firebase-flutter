@@ -70,30 +70,30 @@ class RegisterScreen extends StatelessWidget {
   }
 
   _onSubmitLoginButton(context) async {
+
     if (_isFormValidated()) {
+
       ScaffoldMessenger.of(context).showSnackBar(
         loadingSnackBar(
           text: " Creating user...",
         ),
       );
 
-      final User? user = await _authService.createUserWithEmailAndPassword(
-        email: _emailFieldController.text,
-        password: _passwordFieldController.text,
-      );
+      final User? user = await _authService.createUserWithEmailAndPassword(email: _emailFieldController.text, password: _passwordFieldController.text,);
 
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-      if (user != null) {
+      if (user != null) {//user is created
+
         _analyticsService.logLogin();
 
-        _analyticsService.setUserProperties(
-          userId: user.uid,
-          userRole: 'customer',
-        );
+        //set user properties
+        _analyticsService.setUserProperties(userId: user.uid,userRole: 'customer',);
 
         CoffeeRouter.instance.pushAndRemoveUntil(MenuScreen.route());
+
       }
+
     }
   }
 }

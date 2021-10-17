@@ -22,8 +22,11 @@ class AuthService {
 
   Future<User?> signInAnonymously() async {
     try {
+
       final userCredential = await _firebaseAuth.signInAnonymously();
+
       return userCredential.user;
+
     } on FirebaseAuthException catch (e) {
       showAlertDialog(e.message ?? 'SignIn failed');
     } catch (e) {
@@ -31,17 +34,16 @@ class AuthService {
     }
   }
 
-  Future<User?> signInWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
+  Future<User?> signInWithEmailAndPassword({required String email, required String password, }) async {
+
     try {
-      final UserCredential userCredential =
-          await _firebaseAuth.signInWithCredential(
-        EmailAuthProvider.credential(email: email, password: password),
-      );
+
+      final UserCredential userCredential =  await _firebaseAuth.signInWithCredential(EmailAuthProvider.credential(email: email, password: password),);
+
       return userCredential.user;
+
     } on FirebaseAuthException catch (e) {
+
       if (e.code == 'user-not-found') {
         showAlertDialog('No user found for that email.');
       } else if (e.code == 'wrong-password') {
@@ -49,14 +51,14 @@ class AuthService {
       } else {
         showAlertDialog(e.message ?? 'SignIn failed');
       }
+
     } catch (e) {
       showAlertDialog(e.toString());
     }
+
   }
 
-  Future<void> sendPasswordResetEmail({
-    required String email,
-  }) async {
+  Future<void> sendPasswordResetEmail({required String email,}) async {
     return _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
@@ -64,33 +66,24 @@ class AuthService {
     return currentUser?.delete();
   }
 
-  Future<void>? updatePassword({
-    required String newPassword,
-  }) {
+  Future<void>? updatePassword({required String newPassword,}) {
     currentUser?.updatePassword(newPassword);
   }
 
-  Future<void>? updateProfile({
-    required String photoURL,
-    required String displayName,
-  }) {
-    currentUser?.updateProfile(
-      photoURL: photoURL,
-      displayName: displayName,
-    );
+  Future<void>? updateProfile({required String photoURL, required String displayName, }) {
+    currentUser?.updateProfile(photoURL: photoURL, displayName: displayName,);
   }
 
-  Future<User?> createUserWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
+  Future<User?> createUserWithEmailAndPassword({required String email,required String password,}) async {
+
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user;
+
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email,password: password,);//user created
+
+      return userCredential.user;//
+
     } on FirebaseAuthException catch (e) {
+
       if (e.code == 'weak-password') {
         showAlertDialog('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
@@ -98,9 +91,11 @@ class AuthService {
       } else {
         showAlertDialog(e.message ?? 'SignUp failed');
       }
+
     } catch (e) {
       showAlertDialog(e.toString());
     }
+
   }
 
   Future<String?> signInWithPhoneNumber(String phone) async {
@@ -115,30 +110,35 @@ class AuthService {
   }
 
   Future<User?> signInWithGoogle() async {
+
     try {
+
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: [
           'https://www.googleapis.com/auth/userinfo.email',
           'https://www.googleapis.com/auth/userinfo.profile',
         ],
       );
+
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       // sign in process was aborted
       if (googleUser != null) {
+
         final googleAuth = await googleUser.authentication;
+
         final userCredential = await _firebaseAuth.signInWithCredential(
-          GoogleAuthProvider.credential(
-            idToken: googleAuth.idToken,
-            accessToken: googleAuth.accessToken,
-          ),
+          GoogleAuthProvider.credential(idToken: googleAuth.idToken,accessToken: googleAuth.accessToken,),
         );
+
         return userCredential.user;
       }
+
     } on FirebaseAuthException catch (e) {
       showAlertDialog(e.message ?? 'SignIn with Google failed');
     } catch (e) {
       showAlertDialog(e.toString());
     }
+
   }
 
   Future<bool> isAppleSignInAvailable() {

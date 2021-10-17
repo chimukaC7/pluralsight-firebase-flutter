@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (snapshot.hasError) {
           return Scaffold(body: Center(child: Text('Error!')));
         }
-        final User? user = snapshot.data;
+        final User? user = snapshot.data;//retrieving data
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -54,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: Text('You are logged in annonymously!'),
               ),
+            //user is logged in and email is not verified
             if (user != null && !user.isAnonymous)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -72,6 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () async {
                   await _analyticsService.logLogoutPressed();
                   await _authService.signOut();
+                  //after successful signing out,navigate user to home screen
                   CoffeeRouter.instance.pushAndRemoveUntil(HomeScreen.route());
                 },
                 text: 'Logout',

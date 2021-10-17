@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       const Duration(milliseconds: 1000),
       () {
-        if (_authService.currentUser != null) {
+        if (_authService.currentUser != null) {//is user is already signed and authenticated
           CoffeeRouter.instance.pushReplacement(MenuScreen.route());
         } else {
           CoffeeRouter.instance.pushReplacement(HomeScreen.route());

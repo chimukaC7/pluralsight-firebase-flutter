@@ -40,16 +40,20 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
     _authChangeSubscription = _authService.authStateChanges().listen((user) {
-      if (user != null) {
+      if (user != null) {//user is already signed in
         // which provider users is logged
         user.providerData.forEach((provider) {
           _analyticsService.logLogin(loginMethod: provider.providerId);
         });
+
+        //set user properties
         _analyticsService.setUserProperties(
           userId: user.uid,
           userRole: 'customer',
         );
+
         CoffeeRouter.instance.pushAndRemoveUntil(MenuScreen.route());
       }
     });
@@ -98,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //   _displayTextInputDialog(context);
                   // }),
                   // SizedBox(height: 20),
+                  //GOOGLE
                   SignInButton.google(onPressed: () {
                     _authService.signInWithGoogle();
                   }),
@@ -115,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+                  //MAIL
                   SignInButton.mail(onPressed: () {
                     CoffeeRouter.instance.push(LoginEmailScreen.route());
                   }),
@@ -123,8 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20),
                   CommonButton(
                     onPressed: _loading
-                        ? null // disable button
+                        ? null // disable button depending on loading state
                         : () async {
+
                             setState(() {
                               _loading = true;
                             });
@@ -134,6 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               _loading = false;
                             });
+
                           },
                     text: _loading
                         ? 'Please wait, Login...'

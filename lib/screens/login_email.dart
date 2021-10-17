@@ -106,8 +106,11 @@ class _LoginEmailScreenState extends State<LoginEmailScreen> {
     return form.validate();
   }
 
+  //when login button is pressed
   _onSubmitLoginButton() async {
+
     if (_isFormValidated()) {
+
       ScaffoldMessenger.of(context).showSnackBar(
         loadingSnackBar(
           text: " Signing-In...",
