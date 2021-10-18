@@ -69,6 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user.sendEmailVerification();
                 },
               ),
+            //you can provide a news letter and users can subscribe to that
             // if (_messagingService.userDeviceToken != null)
             //   CommonButton(
             //     text: 'Subscribe to new coffee',

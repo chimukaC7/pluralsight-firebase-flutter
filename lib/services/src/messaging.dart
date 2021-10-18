@@ -34,8 +34,8 @@ class MessagingService {
   }
 
   Future<NotificationSettings> _requestPermission() async {
-    final NotificationSettings settings =
-        await _firebaseMessaging.requestPermission(
+
+    final NotificationSettings settings =  await _firebaseMessaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
@@ -44,16 +44,16 @@ class MessagingService {
       provisional: false,
       announcement: false,
     );
+
     print('User granted permission: ${settings.authorizationStatus}');
 
     return settings;
   }
 
   _firebaseMessagingForgroundHandler() {
-    FirebaseMessaging.onMessage.listen(
-      (
-        RemoteMessage message,
-      ) {
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message,) {
+
         print('Message data: ${message.data}');
         // custom message data: {price: 10, coffee: latte2}
         if (message.notification != null) {
@@ -62,8 +62,10 @@ class MessagingService {
             message.notification?.title,
           );
         }
+
       },
     );
+
   }
 
   void showMessage(RemoteMessage remoteMessage) {
@@ -83,11 +85,12 @@ class MessagingService {
 
   Future<void> _getToken() async {
     final String? token = await _firebaseMessaging.getToken();
+
     if (token != null) {
       _token = token;
     }
 
-    _firebaseMessaging.onTokenRefresh.listen(setToken);
+    _firebaseMessaging.onTokenRefresh.listen(setToken);//set token incase of any change
   }
 
   Future<void> deleteToken() async {

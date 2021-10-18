@@ -13,9 +13,9 @@ bool get isInDebugMode {
   return inDebugMode;
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(
-  RemoteMessage message,
-) async {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message,) async {
+  //we must handle our message here
+  //for example to update UI or to do something in background silently
   print("Handling a background message: ${message.messageId}");
 }
 
