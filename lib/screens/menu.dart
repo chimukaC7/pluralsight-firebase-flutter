@@ -123,4 +123,14 @@ class _MenuScreenState extends State<MenuScreen> {
       },
     );
   }
+  /*
+  *
+  * use cases
+  * -promotional messages
+  * -onboarding
+  * -recurring/one time
+  * -watch a video
+  * -complete a level
+  * -help and support
+  * */
 }
