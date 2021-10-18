@@ -21,6 +21,7 @@ class CartScreen extends StatelessWidget {
       stream: _firestoreService.getUserCart(userId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
+
           if (snapshot.hasData) {
             final List<CartItem> items = snapshot.data ?? [];
 
@@ -51,14 +52,9 @@ class CartScreen extends StatelessWidget {
                           key: Key(item.id ?? '$index'),
                           background: Container(color: Colors.red[700]),
                           onDismissed: (direction) {
-                            _firestoreService.deleteUserCartItem(
-                              userId: userId,
-                              cartId: item.id!,
-                            );
-                            listKey.currentState!.removeItem(
-                              index,
-                              (context, animation) => SizedBox(),
-                            );
+                            _firestoreService.deleteUserCartItem(userId: userId,cartId: item.id!,);
+
+                            listKey.currentState!.removeItem(index,(context, animation) => SizedBox(),);
                           },
                           direction: DismissDirection.endToStart,
                           child: TextButton(
@@ -85,8 +81,8 @@ class CartScreen extends StatelessWidget {
                     text: 'Send Order',
                     highlighColor: true,
                     onPressed: () async {
-                      final String orderId =
-                          await _firestoreService.submitOrder(userId, items);
+                      //passing user id and all items in the cart
+                      final String orderId = await _firestoreService.submitOrder(userId, items);
 
                       await _analyticsService.logPlaceOrder(
                         orderId: orderId,
@@ -95,9 +91,8 @@ class CartScreen extends StatelessWidget {
                         quantity: items.length,
                       );
 
-                      CoffeeRouter.instance.pushReplacement(
-                        MenuScreen.route(),
-                      );
+                      CoffeeRouter.instance.pushReplacement(MenuScreen.route(),);
+
                     },
                   ),
                 ],

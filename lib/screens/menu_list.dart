@@ -13,7 +13,7 @@ class MenuList extends StatefulWidget {
 
 class _MenuListState extends State<MenuList> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  final FirestoreService _firestoreService = FirestoreService.instance;
+  final FirestoreService _firestoreService = FirestoreService.instance;//reference to the Firestore service
   List<Coffee> _items = [];
 
   @override
@@ -47,5 +47,7 @@ class _MenuListState extends State<MenuList> {
         listKey.currentState!.insertItem(_items.length - 1);
       }
     }
+
   }
+
 }

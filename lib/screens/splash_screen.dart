@@ -53,13 +53,10 @@ class _SplashScreenState extends State<SplashScreen> {
       () {
         if (_authService.currentUser != null) {
           final String userId = _authService.currentUser!.uid;
-          
-          _firestoreService.setUserLastLoginTimestamp(userId);
 
-          _firestoreService.addLog(
-            activity: Activity.login,
-            userId: userId,
-          );
+          _firestoreService.setUserLastLoginTimestamp(userId);//updating last time login
+
+          _firestoreService.addLog(activity: Activity.login, userId: userId,);
 
           CoffeeRouter.instance.pushReplacement(MenuScreen.route());
         } else {

@@ -9,6 +9,7 @@ part 'order.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Order {
+
   const Order({
     required this.items,
     this.id,
@@ -33,6 +34,7 @@ class Order {
 
   bool get isReady => status == OrderStatus.ready;
 
+  //total amount
   num get total => items
       .map(
         (item) => getCartItemTotal(
@@ -48,6 +50,7 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
   Map<String, dynamic> toJson() => _$OrderToJson(this);
 
+  //time conversion
   static DateTime _fromJson(Timestamp timestamp) => timestamp.toDate();
   static FieldValue _toJson(DateTime time) => FieldValue.serverTimestamp();
 }

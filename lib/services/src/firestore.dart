@@ -13,10 +13,7 @@ class FirestoreService {
 
   static FirestoreService get instance => _service;
 
-  Future<void> deleteUserCartItem({
-    required String userId,
-    required String cartId,
-  }) async {
+  Future<void> deleteUserCartItem({required String userId,required String cartId,}) async {
     final path = ApiPath.userCartItem(userId, cartId);
     final DocumentReference document = _firebaseFirestore.doc(path);
     await document.delete();
@@ -41,18 +38,12 @@ class FirestoreService {
     );
   }
 
-  Future<void> addLog({
-    required Activity activity,
-    required String userId,
-  }) async {
+  Future<void> addLog({required Activity activity,required String userId,}) async {
+
     final String path = ApiPath.logs;
     final CollectionReference collection = _firebaseFirestore.collection(path);
 
-    final log = UserLog(
-      activity: activity,
-      created: DateTime.now(),
-      userId: userId,
-    );
+    final log = UserLog(activity: activity, created: DateTime.now(),userId: userId,);
 
     await collection.add(log.toJson());
   }
@@ -68,6 +59,7 @@ class FirestoreService {
     final String path = ApiPath.coffees;
     final CollectionReference collection = _firebaseFirestore.collection(path);
 
+    //snapshorts keeps track of changes in the firestore
     return collection.snapshots().map(
       (QuerySnapshot querySnapshot) {
         return querySnapshot.docs.map(
@@ -76,17 +68,18 @@ class FirestoreService {
 
             data['id'] = snapshot.id;
 
-            return Coffee.fromJson(data);
+            return Coffee.fromJson(data);//converting the json to the Coffee object
           },
         ).toList();
       },
     );
   }
 
+  //to keep track of each coffee just incase anything changed in the database so the user can receive it in real time
   Stream<Coffee> getCoffee(String id) {
+
     final String path = ApiPath.coffee(id);
-    final Stream<DocumentSnapshot> snapshots =
-        _firebaseFirestore.doc(path).snapshots();
+    final Stream<DocumentSnapshot> snapshots = _firebaseFirestore.doc(path).snapshots();//calling the doc function
 
     return snapshots.map(
       (DocumentSnapshot snapshot) {
@@ -94,9 +87,10 @@ class FirestoreService {
 
         data['id'] = snapshot.id;
 
-        return Coffee.fromJson(data);
+        return Coffee.fromJson(data);//convert the json data to the coffee object
       },
     );
+
   }
 
   Future<FirestoreUser> getUser(String userId) async {
@@ -109,6 +103,7 @@ class FirestoreService {
   }
 
   Future<void> setUserLastLoginTimestamp(String userId) async {
+
     try {
       final String path = ApiPath.user(userId);
       final DocumentReference document = _firebaseFirestore.doc(path);
@@ -125,6 +120,7 @@ class FirestoreService {
         },
         SetOptions(merge: true),
       );
+
     } catch (e) {
       print('Create User Error!');
       // log in error reporting system like crashlytics
@@ -133,15 +129,18 @@ class FirestoreService {
   }
 
   Future<void> setUserRoles(String userId, List<UserRole> roles) async {
+
     try {
       final String path = ApiPath.user(userId);
       final DocumentReference document = _firebaseFirestore.doc(path);
+
       await document.set(
         {
           'roles': roles.map((role) => role.name).toList(),
         },
-        SetOptions(merge: true),
+        SetOptions(merge: true),//to ensure we are merging fields into the existing document instead of overriding
       );
+
     } catch (e) {
       print('Create User Error!');
       // log in error reporting system like crashlytics
@@ -179,6 +178,7 @@ class FirestoreService {
   }
 
   Stream<List<Order>> getUserOrders(String userId) {
+
     final String path = ApiPath.orders;
     final Query query = _firebaseFirestore
         .collection(path)
@@ -201,9 +201,11 @@ class FirestoreService {
   }
 
   Future<String> submitOrder(String uid, List<CartItem> cartItems) async {
+
     final String ordersPath = ApiPath.orders;
-    final CollectionReference orderCollection =
-        _firebaseFirestore.collection(ordersPath);
+    final CollectionReference orderCollection = _firebaseFirestore.collection(ordersPath);//get reference to the order collection
+
+    //using the Order model to create the object
     final order = Order(
       items: cartItems,
       userId: uid,
@@ -212,16 +214,17 @@ class FirestoreService {
       updated: DateTime.now(),
     );
     // place an order
-    final DocumentReference orderCreated =
-        await orderCollection.add(order.toJson());
+    final DocumentReference orderCreated = await orderCollection.add(order.toJson());
     // clear user cart
     final String userCartPath = ApiPath.userCart(uid);
-    final CollectionReference cartCollection =
-        _firebaseFirestore.collection(userCartPath);
+    final CollectionReference cartCollection = _firebaseFirestore.collection(userCartPath);
 
+    //iterate the cart items and delete the documents one by one
     for (CartItem item in cartItems) {
       await cartCollection.doc(item.id).delete();
     }
-    return orderCreated.id;
+
+    return orderCreated.id;//return order id
   }
+
 }

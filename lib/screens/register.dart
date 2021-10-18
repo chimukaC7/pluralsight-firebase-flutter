@@ -91,6 +91,7 @@ class RegisterScreen extends StatelessWidget {
           userRoles: [UserRole.customer],
         );
 
+        //set the role of the user after successful registration
         await _firestoreService.setUserRoles(user.uid, [UserRole.customer]);
 
         CoffeeRouter.instance.pushAndRemoveUntil(MenuScreen.route());

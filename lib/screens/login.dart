@@ -38,24 +38,21 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
     _authChangeSubscription = _authService.authStateChanges().listen(
       (User? user) async {
+
         if (user != null) {
           // which provider users is logged
           user.providerData.forEach((provider) {
             _analyticsService.logLogin(loginMethod: provider.providerId);
           });
-          _analyticsService.setUserProperties(
-            userId: user.uid,
-            userRoles: [UserRole.customer],
-          );
 
-          _firestoreService.setUserLastLoginTimestamp(user.uid);
+          _analyticsService.setUserProperties(userId: user.uid, userRoles: [UserRole.customer],);
 
-          await _firestoreService.addLog(
-            activity: Activity.login,
-            userId: user.uid,
-          );
+          _firestoreService.setUserLastLoginTimestamp(user.uid);//update last time login
+
+          await _firestoreService.addLog(activity: Activity.login, userId: user.uid,);
 
           CoffeeRouter.instance.pushAndRemoveUntil(MenuScreen.route());
         }
